@@ -33,6 +33,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'jakarta.annotation:jakarta.annotation-api:2.1.0'
 }
 
 tasks.named('test') {
