@@ -1,6 +1,7 @@
 package com.example.text_drive.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,11 @@ public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "File name cannot be blank")
     private String name;
+
+    @NotBlank(message = "File content cannot be blank")
     private String content;
 
     @ManyToOne

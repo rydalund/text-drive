@@ -8,5 +8,12 @@ import java.util.List;
 
 @Repository
 public interface FolderRepository extends JpaRepository<Folder, Long> {
-    List<Folder> findByName(String name);
+
+    /**
+     * Finds folders containing the given string, ignoring case.
+     *
+     * @param name is the name or part of the name to search.
+     * @return A list of folders that match the criteria.
+     */
+    List<Folder> findByNameContainingIgnoreCase(String name);
 }

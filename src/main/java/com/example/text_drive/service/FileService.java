@@ -1,6 +1,4 @@
 package com.example.text_drive.service;
-
-import com.example.text_drive.dto.FileDTO;
 import com.example.text_drive.model.File;
 import com.example.text_drive.model.Folder;
 import com.example.text_drive.repository.FileRepository;
@@ -8,8 +6,8 @@ import com.example.text_drive.repository.FolderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Objects;
+import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,29 +16,46 @@ public class FileService {
     private final FileRepository fileRepository;
     private final FolderRepository folderRepository;
 
-    public FileDTO uploadFile(MultipartFile file, Long folderId) {
-        if (!Objects.requireNonNull(file.getContentType()).startsWith("text/")) {
-            throw new IllegalArgumentException("Filen är inte en textfil!");
-        }
+    public File uploadFile(MultipartFile file, Long folderId) {
+        validateTextFile(file);
 
         Folder folder = folderRepository.findById(folderId)
-                .orElseThrow(() -> new RuntimeException("Mappen hittades inte"));
+                .orElseThrow(() -> new IllegalArgumentException("Mappen med ID " + folderId + " hittades inte"));
 
         File fileEntity = new File(file.getOriginalFilename(), file.getOriginalFilename(), folder);
-        fileRepository.save(fileEntity);
+        try {
+            fileEntity.setContent(new String(file.getBytes()));  // Här sätts filens innehåll
+        } catch (IOException e) {
+            throw new RuntimeException("Fel vid läsning av filinnehållet", e);  // Om något går fel vid filbehandling
+        }
 
-        return new FileDTO(fileEntity);
+        return fileRepository.save(fileEntity);  // Returnera entiteten
     }
 
-    public String downloadFile(Long fileId) {
-        File file = fileRepository.findById(fileId)
-                .orElseThrow(() -> new RuntimeException("Fil inte funnen"));
-        return file.getContent();
+    public List<File> searchFilesByName(String name) {
+        return fileRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    private void validateTextFile(MultipartFile file) {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("Filen är tom och kan inte laddas upp");
+        }
+
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("text/")) {
+            throw new IllegalArgumentException("Filen är inte en textfil!");
+        }
+    }
+
+    public File downloadFile(Long fileId) {
+        return fileRepository.findById(fileId)
+                .orElseThrow(() -> new IllegalArgumentException("Fil med ID " + fileId + " hittades inte"));
     }
 
     public void deleteFile(Long fileId) {
         File file = fileRepository.findById(fileId)
-                .orElseThrow(() -> new RuntimeException("Fil inte funnen"));
+                .orElseThrow(() -> new IllegalArgumentException("Fil med ID " + fileId + " hittades inte"));
+
         fileRepository.delete(file);
     }
 }
