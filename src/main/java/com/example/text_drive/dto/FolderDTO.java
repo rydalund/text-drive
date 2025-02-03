@@ -6,12 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Data Transfer Object (DTO) for Folder entity, used tp transfer folder data between layers of the application.
+ * Data Transfer Object (DTO) for Folder entity, used to transfer folder data between layers of the application.
  */
 @Getter
 @Setter

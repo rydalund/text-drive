@@ -7,6 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Represents a File entity in the system.
+ * This class is mapped to a database table using JPA annotations.
+ */
 @Entity
 @Getter
 @Setter
@@ -21,13 +25,22 @@ public class File {
     @NotBlank(message = "File name cannot be blank")
     private String name;
 
-    @NotBlank(message = "File content cannot be blank")
+    //Text instead of "standard" varchar, to enable bigger files
+    @NotBlank(message = "File content cannot be empty")
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne
     @JoinColumn(name = "folder_id")
     private Folder folder;
 
+    /**
+     * Constructor to create a new File instance with specified parameters.
+     *
+     * @param name    The name of the file.
+     * @param content The content of the file.
+     * @param folder  The folder to which the file belongs.
+     */
     public File(String name, String content, Folder folder) {
         this.name = name;
         this.content = content;
