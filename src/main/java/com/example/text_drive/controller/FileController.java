@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,70 +22,43 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping("/upload")
-    public ResponseEntity<FileDTO> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam Long folderId) {
-        try {
-            File uploadedFile = fileService.uploadFile(file, folderId);
-            return ResponseEntity.status(HttpStatus.CREATED).body(new FileDTO(uploadedFile));
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode()).build();
-        }
+    public ResponseEntity<FileDTO> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam Long folderId, Authentication authentication) {
+        File uploadedFile = fileService.uploadFile(file, folderId, authentication);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new FileDTO(uploadedFile));
     }
 
     @GetMapping("/{fileId}")
-    public ResponseEntity<FileDTO> getFile(@PathVariable Long fileId) {
-        try {
-            File file = fileService.getFileById(fileId);
-            return ResponseEntity.ok(new FileDTO(file));
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode()).build();
-        }
+    public ResponseEntity<FileDTO> getFile(@PathVariable Long fileId, Authentication authentication) {
+        File file = fileService.getFileById(fileId, authentication);
+        return ResponseEntity.ok(new FileDTO(file));
     }
 
     @GetMapping("/download/{fileId}")
-    public ResponseEntity<String> downloadFile(@PathVariable Long fileId) {
-        try {
-            File file = fileService.downloadFile(fileId);
-            return ResponseEntity.ok(file.getContent());
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode()).build();
-        }
+    public ResponseEntity<String> downloadFile(@PathVariable Long fileId, Authentication authentication) {
+        File file = fileService.downloadFile(fileId, authentication);
+        return ResponseEntity.ok(file.getContent());
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<FileDTO>> searchFilesByName(@RequestParam String name) {
-        try {
-            List<File> files = fileService.searchFilesByName(name);
-            List<FileDTO> fileDTOs = files.stream()
-                    .map(FileDTO::new)
-                    .collect(Collectors.toList());
-            return ResponseEntity.ok(fileDTOs);
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode()).build();
-        }
+    public ResponseEntity<List<FileDTO>> searchFilesByName(@RequestParam String name, Authentication authentication) {
+        List<File> files = fileService.searchFilesByName(name, authentication);
+        List<FileDTO> fileDTOs = files.stream()
+                .map(FileDTO::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(fileDTOs);
     }
 
     @DeleteMapping("/{fileId}")
-    public ResponseEntity<Void> deleteFile(@PathVariable Long fileId) {
-        try {
-            fileService.deleteFile(fileId);
-            return ResponseEntity.noContent().build();
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode()).build();
-        }
+    public ResponseEntity<Void> deleteFile(@PathVariable Long fileId, Authentication authentication) {
+        fileService.deleteFile(fileId, authentication);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{fileId}")
-    public ResponseEntity<?> renameFile(@PathVariable Long fileId, @Valid @RequestBody FileDTO fileDTO) {
-        try {
-            if (fileDTO.getName() == null || fileDTO.getName().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("File name cannot be empty");
-            }
-            File file = fileService.renameFile(fileId, fileDTO.getName());
-            return ResponseEntity.ok(new FileDTO(file));
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<FileDTO> renameFile(@PathVariable Long fileId,
+                                              @RequestParam String newName,
+                                              Authentication authentication) {
+        File file = fileService.renameFile(fileId, newName, authentication);
+        return ResponseEntity.ok(new FileDTO(file));
     }
 }
