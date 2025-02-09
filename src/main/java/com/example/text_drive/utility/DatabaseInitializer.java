@@ -1,15 +1,10 @@
 package com.example.text_drive.utility;
-
-import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.DriverManager;
+import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.sql.*;
 
 /**
  * A utility class that checks whether the specified database exists and creates it if it does not exist.

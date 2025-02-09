@@ -1,6 +1,7 @@
 package com.example.text_drive.controller;
 
 import com.example.text_drive.dto.FolderDTO;
+import com.example.text_drive.dto.FolderMapper;
 import com.example.text_drive.model.Folder;
 import com.example.text_drive.service.FolderService;
 import jakarta.validation.Valid;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class FolderController {
 
     private final FolderService folderService;
+    private final FolderMapper folderMapper;  // FolderMapper to convert Folder to FolderDTO
 
     @PostMapping
     public ResponseEntity<?> createFolder(@Valid @RequestBody FolderDTO folderDTO, Authentication authentication) {
@@ -27,7 +29,8 @@ public class FolderController {
                 return ResponseEntity.badRequest().body("Folder name cannot be empty");
             }
             Folder folder = folderService.createFolder(folderDTO.getName(), authentication);
-            return ResponseEntity.status(HttpStatus.CREATED).body(new FolderDTO(folder));
+            FolderDTO responseDTO = folderMapper.toDTO(folder);  // Map folder to FolderDTO
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -37,7 +40,8 @@ public class FolderController {
     public ResponseEntity<?> getFolder(@PathVariable Long id, Authentication authentication) {
         try {
             Folder folder = folderService.getFolderById(id, authentication);
-            return ResponseEntity.ok(new FolderDTO(folder));
+            FolderDTO responseDTO = folderMapper.toDTO(folder);
+            return ResponseEntity.ok(responseDTO);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Folder not found or access denied");
         }
@@ -47,7 +51,7 @@ public class FolderController {
     public ResponseEntity<List<FolderDTO>> getUserFolders(Authentication authentication) {
         List<Folder> folders = folderService.getUserFolders(authentication);
         List<FolderDTO> folderDTOs = folders.stream()
-                .map(FolderDTO::new)
+                .map(folderMapper::toDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(folderDTOs);
     }
@@ -60,7 +64,7 @@ public class FolderController {
             }
             List<Folder> folders = folderService.searchFoldersByName(name, authentication);
             List<FolderDTO> folderDTOs = folders.stream()
-                    .map(FolderDTO::new)
+                    .map(folderMapper::toDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(folderDTOs);
         } catch (ResponseStatusException e) {
@@ -70,6 +74,7 @@ public class FolderController {
         }
     }
 
+    // Delete a folder - requires ADMIN
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteFolder(@PathVariable Long id, Authentication authentication) {
         try {
@@ -87,7 +92,8 @@ public class FolderController {
                 return ResponseEntity.badRequest().body("Folder name cannot be empty");
             }
             Folder folder = folderService.updateFolder(id, folderDTO.getName(), authentication);
-            return ResponseEntity.ok(new FolderDTO(folder));
+            FolderDTO responseDTO = folderMapper.toDTO(folder);  // Mappa folder till FolderDTO
+            return ResponseEntity.ok(responseDTO);
         } catch (ResponseStatusException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Folder not found or access denied");
         } catch (Exception e) {

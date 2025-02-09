@@ -3,14 +3,12 @@ package com.example.text_drive.controller;
 import com.example.text_drive.dto.FileDTO;
 import com.example.text_drive.model.File;
 import com.example.text_drive.service.FileService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,9 +53,7 @@ public class FileController {
     }
 
     @PutMapping("/{fileId}")
-    public ResponseEntity<FileDTO> renameFile(@PathVariable Long fileId,
-                                              @RequestParam String newName,
-                                              Authentication authentication) {
+    public ResponseEntity<FileDTO> renameFile(@PathVariable Long fileId, @RequestParam String newName, Authentication authentication) {
         File file = fileService.renameFile(fileId, newName, authentication);
         return ResponseEntity.ok(new FileDTO(file));
     }
