@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * This class is a custom filter that intercepts HTTP requests to authenticate the user
@@ -45,7 +46,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         try {
             // Validate the token and retrieve the user ID from the token
-            Long userId = jwtService.validateToken(token);
+            UUID userId = jwtService.validateToken(token);
             Optional<User> potentialUser = userRepository.findById(userId);
 
             // If user is not found, respond with UNAUTHORIZED

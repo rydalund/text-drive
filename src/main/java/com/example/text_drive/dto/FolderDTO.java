@@ -3,6 +3,7 @@ package com.example.text_drive.dto;
 import com.example.text_drive.model.Folder;
 import com.example.text_drive.model.User;
 import com.example.text_drive.model.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class FolderDTO {
     private UserDTO owner;
     private List<FileDTO> files;
 
+    @JsonIgnore //So this is not included in response
     @Value("${system.user.fallback.password}")  // Password from application.properties
     private String systemFallbackPassword;
 
