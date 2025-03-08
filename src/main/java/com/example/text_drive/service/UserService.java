@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Service class for user-related operations.
@@ -125,5 +126,15 @@ public class UserService implements UserDetailsService {
         if (userRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("Username is already taken");  // Throw an exception if the username is taken
         }
+    }
+
+    /**
+     * Finds a user by their ID.
+     *
+     * @param id The ID of the user to search for.
+     * @return An Optional containing the user if found, otherwise empty.
+     */
+    public Optional<User> findUserById(UUID id) {
+        return userRepository.findById(id);
     }
 }

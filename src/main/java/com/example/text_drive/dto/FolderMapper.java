@@ -1,6 +1,8 @@
 package com.example.text_drive.dto;
 
+import com.example.text_drive.hateoas.LinkBuilder;
 import com.example.text_drive.model.Folder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,7 +15,13 @@ import java.util.stream.Collectors;
 @Component
 public class FolderMapper {
 
-    public FolderDTO toDTO(Folder folder) {
+    private final LinkBuilder linkBuilder;
+
+    public FolderMapper(LinkBuilder linkBuilder) {
+        this.linkBuilder = linkBuilder;
+    }
+
+    public FolderDTO toDTO(Folder folder, Authentication authentication) {
         if (folder == null) {
             return null;
         }
@@ -24,19 +32,26 @@ public class FolderMapper {
 
         // Map owner to UserDTO if available
         if (folder.getOwner() != null) {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setId(folder.getOwner().getId());
-            userDTO.setUsername(folder.getOwner().getUsername());
+            UserDTO userDTO = new UserDTO(folder.getOwner());
             dto.setOwner(userDTO);
         }
 
         // Map files to FileDTOs using the detailed version of FileDTO
         if (folder.getFiles() != null) {
             List<FileDTO> fileDTOs = folder.getFiles().stream()
-                    .map(FileDTO::new)  // Using the constructor of FileDTO that takes a File
+                    .map(file -> new FileDTO(file, linkBuilder, authentication)) // Use LinkBuilder
                     .collect(Collectors.toList());
             dto.setFiles(fileDTOs);
         }
+
+        // Add HATEOAS links using LinkBuilder
+        dto.add(linkBuilder.getFolderSelfLink(folder.getId(), authentication));
+        dto.add(linkBuilder.getUserFoldersLink(authentication));
+        dto.add(linkBuilder.getCreateFolderLink());
+        dto.add(linkBuilder.getUpdateFolderLink(folder.getId(), authentication));
+        dto.add(linkBuilder.getDeleteFolderLink(folder.getId(), authentication));
+        dto.add(linkBuilder.getSearchFoldersLink(null, authentication));
+        dto.add(linkBuilder.getFilesByFolderIdLink(folder.getId(), authentication));
 
         return dto;
     }

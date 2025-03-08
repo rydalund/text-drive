@@ -54,8 +54,8 @@ public class SecurityConfig {
                 // Define authorization rules for specific HTTP requests.
                 .authorizeHttpRequests(auth -> auth
                         // Allow unrestricted access to the POST /user and POST /user/login endpoints.
-                        .requestMatchers(HttpMethod.POST, "/user").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/user/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
                         // Only users with the "ROLE_ADMIN" authority can delete folders.
                         .requestMatchers(HttpMethod.DELETE, "/folders/**").hasAuthority("ROLE_ADMIN")
                         // All other requests require authentication.

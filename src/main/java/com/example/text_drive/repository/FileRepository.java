@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface FileRepository extends JpaRepository<File, Long> {
     Optional<File> findByIdAndFolderOwner(Long id, User owner);
     List<File> findByNameContainingIgnoreCaseAndFolderOwner(String name, User owner);
+    List<File> findByFolderId(Long folderId);
 }
