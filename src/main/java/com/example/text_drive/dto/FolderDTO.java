@@ -56,13 +56,20 @@ public class FolderDTO extends RepresentationModel<FolderDTO> {
                     : List.of();
 
             // Add HATEOAS links using LinkBuilder
-            this.add(linkBuilder.getFolderSelfLink(folder.getId(), authentication));
-            this.add(linkBuilder.getUserFoldersLink(authentication));
-            this.add(linkBuilder.getCreateFolderLink());
-            this.add(linkBuilder.getUpdateFolderLink(folder.getId(), authentication));
-            this.add(linkBuilder.getDeleteFolderLink(folder.getId(), authentication));
-            this.add(linkBuilder.getSearchFoldersLink(null, authentication));
-            this.add(linkBuilder.getFilesByFolderIdLink(folder.getId(), authentication));
+            this.add(linkBuilder.getFolderSelfLink(folder.getId(), authentication)); //Folder self-link
+            this.add(linkBuilder.getUserFoldersLink(authentication)); // Link to get user's folders
+            this.add(linkBuilder.getCreateFolderLink()); // Link to create a folder
+            this.add(linkBuilder.getSearchFoldersLink(null, authentication)); // Link to search folders
+            this.add(linkBuilder.getUpdateFolderLink(null, authentication)); // Link to update a folder
+            this.add(linkBuilder.getDeleteFolderLink(null, authentication)); // Link to delete a folder
+            this.add(linkBuilder.getFilesByFolderIdLink(null, authentication)); // Link to get files in a folder
+            this.add(linkBuilder.getFileLink(null, authentication)); // Link to get a file
+            this.add(linkBuilder.getUploadFileLink()); // Link to upload a file
+            this.add(linkBuilder.getSearchFilesLink(null, authentication)); // Link to search files
+            this.add(linkBuilder.getDownloadFileLink(null, authentication)); // Link to download a file
+            this.add(linkBuilder.getRenameFileLink(null, authentication)); // Link to rename a file
+            this.add(linkBuilder.getDeleteFileLink(null, authentication)); // Link to delete a file
+            this.add(linkBuilder.getRegisterLink()); // Link to register a new user
         }
     }
 

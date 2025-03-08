@@ -28,20 +28,18 @@ public class LoginResponseDTO extends RepresentationModel<LoginResponseDTO> {
         this.user = user;
 
         // Add HATEOAS links using LinkBuilder
-        this.add(linkBuilder.getLoginLink()); // Self-link for login
-        this.add(linkBuilder.getUserDetailsLink(user.getId())); // Link to user details
         this.add(linkBuilder.getCreateFolderLink()); // Link to create a folder
         this.add(linkBuilder.getFolderLink(null, authentication)); // Link to get a folder
         this.add(linkBuilder.getUserFoldersLink(authentication)); // Link to get user's folders
         this.add(linkBuilder.getSearchFoldersLink(null, authentication)); // Link to search folders
-        this.add(linkBuilder.getDeleteFolderLink(null, authentication)); // Link to delete a folder
         this.add(linkBuilder.getUpdateFolderLink(null, authentication)); // Link to update a folder
-        this.add(linkBuilder.getUploadFileLink()); // Link to upload a file
-        this.add(linkBuilder.getFileLink(null, authentication)); // Link to get a file
-        this.add(linkBuilder.getDownloadFileLink(null, authentication)); // Link to download a file
-        this.add(linkBuilder.getSearchFilesLink(null, authentication)); // Link to search files
-        this.add(linkBuilder.getDeleteFileLink(null, authentication)); // Link to delete a file
-        this.add(linkBuilder.getRenameFileLink(null, authentication)); // Link to rename a file
+        this.add(linkBuilder.getDeleteFolderLink(null, authentication)); // Link to delete a folder
         this.add(linkBuilder.getFilesByFolderIdLink(null, authentication)); // Link to get files in a folder
+        this.add(linkBuilder.getFileLink(null, authentication)); // Link to get a file
+        this.add(linkBuilder.getUploadFileLink()); // Link to upload a file
+        this.add(linkBuilder.getSearchFilesLink(null, authentication)); // Link to search files
+        this.add(linkBuilder.getDownloadFileLink(null, authentication)); // Link to download a file
+        this.add(linkBuilder.getRenameFileLink(null, authentication)); // Link to rename a file
+        this.add(linkBuilder.getDeleteFileLink(null, authentication)); // Link to delete a file
     }
 }

@@ -33,7 +33,7 @@ public class LinkBuilder {
     public Link getUserSelfLink(UUID userId) {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(UserController.class).getUser(userId, authenticationPlaceholder)
-        ).withSelfRel();
+        ).withSelfRel().withTitle("HTTP Method: GET");
     }
 
     /**
@@ -44,7 +44,7 @@ public class LinkBuilder {
     public Link getRegisterLink() {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(UserController.class).createUser(null)
-        ).withRel("register");
+        ).withRel("register").withTitle("HTTP Method: POST");
     }
 
     /**
@@ -55,7 +55,7 @@ public class LinkBuilder {
     public Link getLoginLink() {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(UserController.class).login(loginRequestPlaceholder, authenticationPlaceholder)
-        ).withRel("login");
+        ).withRel("login").withTitle("HTTP Method: POST");
     }
 
     /**
@@ -67,7 +67,7 @@ public class LinkBuilder {
     public Link getUserDetailsLink(UUID userId) {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(UserController.class).getUser(userId, authenticationPlaceholder)
-        ).withRel("user-details");
+        ).withRel("user-details").withTitle("HTTP Method: GET");
     }
 
     //FolderController Links
@@ -82,7 +82,7 @@ public class LinkBuilder {
     public Link getFolderSelfLink(Long folderId, Authentication authentication) {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FolderController.class).getFolder(folderId, authentication)
-        ).withSelfRel();
+        ).withSelfRel().withTitle("HTTP Method: GET");
     }
 
     /**
@@ -93,7 +93,7 @@ public class LinkBuilder {
     public Link getCreateFolderLink() {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FolderController.class).createFolder(null, authenticationPlaceholder)
-        ).withRel("create-folder");
+        ).withRel("create-folder").withTitle("HTTP Method: POST");
     }
 
     /**
@@ -106,7 +106,7 @@ public class LinkBuilder {
     public Link getFolderLink(Long folderId, Authentication authentication) {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FolderController.class).getFolder(folderId, authentication)
-        ).withRel("get-folder");
+        ).withRel("get-folder").withTitle("HTTP Method: GET");
     }
 
     /**
@@ -118,7 +118,7 @@ public class LinkBuilder {
     public Link getUserFoldersLink(Authentication authentication) {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FolderController.class).getUserFolders(authentication)
-        ).withRel("get-user-folders");
+        ).withRel("get-user-folders").withTitle("HTTP Method: GET");
     }
 
     /**
@@ -131,7 +131,7 @@ public class LinkBuilder {
     public Link getSearchFoldersLink(String name, Authentication authentication) {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FolderController.class).searchFoldersByName(name, authentication)
-        ).withRel("search-folders");
+        ).withRel("search-folders").withTitle("HTTP Method: GET");
     }
 
     /**
@@ -145,7 +145,7 @@ public class LinkBuilder {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FolderController.class).deleteFolder(folderId, authentication)
         ).withRel("delete-folder")
-         .withTitle("Requires ROLE_ADMIN"); //To inform that Admin is needed for this
+                .withTitle("HTTP Method: DELETE (Requires ROLE_ADMIN)"); //To inform that Admin is needed for this
     }
 
     /**
@@ -158,7 +158,7 @@ public class LinkBuilder {
     public Link getUpdateFolderLink(Long folderId, Authentication authentication) {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FolderController.class).updateFolder(folderId, null, authentication)
-        ).withRel("update-folder");
+        ).withRel("update-folder").withTitle("HTTP Method: PUT");
     }
 
     /**
@@ -171,7 +171,7 @@ public class LinkBuilder {
     public Link getFilesByFolderIdLink(Long folderId, Authentication authentication) {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FileController.class).getFilesByFolderId(folderId, authentication)
-        ).withRel("files-in-folder");
+        ).withRel("files-in-folder").withTitle("HTTP Method: GET");
     }
 
     //FileController Links
@@ -186,7 +186,7 @@ public class LinkBuilder {
     public Link getFileSelfLink(Long fileId, Authentication authentication) {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FileController.class).getFile(fileId, authentication)
-        ).withSelfRel();
+        ).withSelfRel().withTitle("HTTP Method: GET");
     }
 
     /**
@@ -199,7 +199,7 @@ public class LinkBuilder {
         Long longPlaceholder = 1L;
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FileController.class).uploadFile(null, longPlaceholder, authenticationPlaceholder)
-        ).withRel("upload-file");
+        ).withRel("upload-file").withTitle("HTTP Method: PUT");
     }
 
     /**
@@ -212,7 +212,7 @@ public class LinkBuilder {
     public Link getFileLink(Long fileId, Authentication authentication) {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FileController.class).getFile(fileId, authentication)
-        ).withRel("get-file");
+        ).withRel("get-file").withTitle("HTTP Method: GET");
     }
 
     /**
@@ -225,7 +225,7 @@ public class LinkBuilder {
     public Link getDownloadFileLink(Long fileId, Authentication authentication) {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FileController.class).downloadFile(fileId, authentication)
-        ).withRel("download-file");
+        ).withRel("download-file").withTitle("HTTP Method: GET");
     }
 
     /**
@@ -238,7 +238,7 @@ public class LinkBuilder {
     public Link getSearchFilesLink(String name, Authentication authentication) {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FileController.class).searchFilesByName(name, authentication)
-        ).withRel("search-files");
+        ).withRel("search-files").withTitle("HTTP Method: GET");
     }
 
     /**
@@ -251,7 +251,7 @@ public class LinkBuilder {
     public Link getDeleteFileLink(Long fileId, Authentication authentication) {
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FileController.class).deleteFile(fileId, authentication)
-        ).withRel("delete-file");
+        ).withRel("delete-file").withTitle("HTTP Method: DELETE");
     }
 
     /**
@@ -266,6 +266,6 @@ public class LinkBuilder {
         String stringPlaceholder = "placeholder";
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FileController.class).renameFile(fileId, stringPlaceholder, authentication)
-        ).withRel("rename-file");
+        ).withRel("rename-file").withTitle("HTTP Method: PUT");
     }
 }
