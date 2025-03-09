@@ -63,8 +63,8 @@ public class FolderDTO extends RepresentationModel<FolderDTO> {
             this.add(linkBuilder.getUpdateFolderLink(null, authentication)); // Link to update a folder
             this.add(linkBuilder.getDeleteFolderLink(null, authentication)); // Link to delete a folder
             this.add(linkBuilder.getFilesByFolderIdLink(null, authentication)); // Link to get files in a folder
-            this.add(linkBuilder.getFileLink(null, authentication)); // Link to get a file
             this.add(linkBuilder.getUploadFileLink()); // Link to upload a file
+            this.add(linkBuilder.getFileLink(null, authentication)); // Link to get a file
             this.add(linkBuilder.getSearchFilesLink(null, authentication)); // Link to search files
             this.add(linkBuilder.getDownloadFileLink(null, authentication)); // Link to download a file
             this.add(linkBuilder.getRenameFileLink(null, authentication)); // Link to rename a file

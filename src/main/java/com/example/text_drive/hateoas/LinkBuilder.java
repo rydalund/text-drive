@@ -262,7 +262,6 @@ public class LinkBuilder {
      * @return A link for renaming a file.
      */
     public Link getRenameFileLink(Long fileId, Authentication authentication) {
-        // Placeholder for String (e.g., name)
         String stringPlaceholder = "placeholder";
         return WebMvcLinkBuilder.linkTo(
                 WebMvcLinkBuilder.methodOn(FileController.class).renameFile(fileId, stringPlaceholder, authentication)

@@ -52,6 +52,13 @@ public class FolderMapper {
         dto.add(linkBuilder.getDeleteFolderLink(folder.getId(), authentication));
         dto.add(linkBuilder.getSearchFoldersLink(null, authentication));
         dto.add(linkBuilder.getFilesByFolderIdLink(folder.getId(), authentication));
+        dto.add(linkBuilder.getUploadFileLink()); // Link to upload a file
+        dto.add(linkBuilder.getFileLink(null, authentication)); // Link to get a file
+        dto.add(linkBuilder.getSearchFilesLink(null, authentication)); // Link to search files
+        dto.add(linkBuilder.getDownloadFileLink(null, authentication)); // Link to download a file
+        dto.add(linkBuilder.getRenameFileLink(null, authentication)); // Link to rename a file
+        dto.add(linkBuilder.getDeleteFileLink(null, authentication)); // Link to delete a file
+        dto.add(linkBuilder.getRegisterLink()); // Link to register a new user
 
         return dto;
     }

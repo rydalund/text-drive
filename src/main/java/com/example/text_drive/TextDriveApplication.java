@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 public class TextDriveApplication {
 
 	public static void main(String[] args) {
-		// Create a SpringApplication instance and add the DatabaseInitializer to handle database initialization at startup
+		// Create a SpringApplication and add the DatabaseInitializer to handle database initialization at startup
 		SpringApplication app = new SpringApplication(TextDriveApplication.class);
 		app.addListeners(new DatabaseInitializer());  // Add DatabaseInitializer to manage database logic
 		app.run(args);  // Run the Spring Boot application
