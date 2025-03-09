@@ -20,6 +20,9 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    private String oidcId = null;
+    private String oidcProvider = null;
+
     @Column(unique = true)
     private String username;
     private String password;

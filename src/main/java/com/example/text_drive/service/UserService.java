@@ -48,6 +48,36 @@ public class UserService implements UserDetailsService {
     }
 
     /**
+     * Creates a new user with OpenID-connect information.
+     * It also creates a random password that is saved to the database
+     * The idea is to be able to reset it,
+     * if you want to log in with a password instead (though there is no functionality for that yet).
+     *
+     * @param username The username (GitHub username).
+     * @param email The email address (if available).
+     * @param oidcId The OpenID-connect user ID.
+     * @param oidcProvider The OpenID-connect provider (Github).
+     * @return The created user entity.
+     */
+    @Transactional
+    public User createOpenIdUser(String username, String email, String oidcId, String oidcProvider) {
+        // Use the email address as the username if available, otherwise use the GitHub username.
+        String finalUsername = (email != null && !email.isBlank()) ? email : username;
+
+        // Set default provider to "github" if none is provided.
+        String finalOidcProvider = (oidcProvider != null && !oidcProvider.isBlank()) ? oidcProvider : "github";
+
+        // Create a new user with a random password.
+        User user = new User();
+        user.setUsername(finalUsername);
+        user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString())); // Random password
+        user.setRole(Role.ROLE_USER);
+        user.setOidcId(oidcId);
+        user.setOidcProvider(finalOidcProvider); // Use the default or provided provider
+        return userRepository.save(user);
+    }
+
+    /**
      * Authenticates the user with the given username and password.
      * If the credentials are valid, generates and returns a JWT token for the user.
      *
@@ -64,6 +94,16 @@ public class UserService implements UserDetailsService {
         }
 
         return jwtService.generateToken(user.getId());
+    }
+
+    /**
+     * Finds a user by their OpenID identifier.
+     *
+     * @param oidcId The OpenID identifier of the user.
+     * @return An Optional containing the User if found, otherwise an empty Optional.
+     */
+    public Optional<User> findByOpenId(String oidcId) {
+        return userRepository.findByOidcId(oidcId);
     }
 
     /**

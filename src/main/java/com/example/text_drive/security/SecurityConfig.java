@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -39,7 +42,8 @@ public class SecurityConfig {
             HttpSecurity http,
             JWTService jwtService,
             UserRepository userRepository,
-            UserService userService
+            UserService userService,
+            OAuth2SuccessHandler oAuth2SuccessHandler
     ) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -56,11 +60,15 @@ public class SecurityConfig {
                         // Allow unrestricted access to the POST /user and POST /user/login endpoints.
                         .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
+                        .requestMatchers("/oauth2/**").permitAll()
                         // Only users with the "ROLE_ADMIN" authority can delete folders.
                         .requestMatchers(HttpMethod.DELETE, "/folders/**").hasAuthority("ROLE_ADMIN")
                         // All other requests require authentication.
                         .anyRequest().authenticated()
                 )
+                .oauth2Login(oauth -> {
+                    oauth.successHandler(oAuth2SuccessHandler);
+                })
 
                 .addFilterBefore(
                         new AuthenticationFilter(jwtService, userRepository),
